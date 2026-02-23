@@ -6,22 +6,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body {
+html, body {
   margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden; /* hide scrollbars */
+  cursor:none; /* feels frozen */
   background:#0078D7;
   color:white;
   font-family:"Segoe UI", Arial, sans-serif;
-  overflow:hidden;
-  cursor:none;
 }
 
 #screen {
-  padding:60px;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  height:100vh;
+  width:100%;
+  height:100%;
+  padding:60px;
+  box-sizing:border-box;
 }
 
 .face {
@@ -55,9 +60,9 @@ body {
 }
 
 @keyframes flicker {
-  0%,97%,100%{filter:none;}
-  98%{filter:brightness(1.4);}
-  99%{filter:brightness(0.6);}
+  0%,97%,100% {filter:none;}
+  98% {filter:brightness(1.4);}
+  99% {filter:brightness(0.6);}
 }
 
 .glitch {animation:flicker 7s infinite;}
@@ -71,7 +76,7 @@ body {
     Your PC ran into a problem and needs to restart.<br>
     We're just collecting some error info, and then we'll restart for you.
   </div>
-  <div class="progress"><span id="percent">0%</span>% complete</div>
+  <div class="progress"><span id="percent">0</span>% complete</div>
   <div id="reboot">Rebooting…</div>
   <div class="footer">(Hold ESC ×3 to exit)</div>
 </div>
@@ -108,8 +113,14 @@ function step(){
 }
 setTimeout(step,700);
 
-// 🖥️ Fullscreen
-document.documentElement.requestFullscreen?.().catch(()=>{});
+// 🖥️ Try fullscreen as soon as possible
+function goFullscreen(){
+  const elem = document.documentElement;
+  if(elem.requestFullscreen){elem.requestFullscreen().catch(()=>{});}
+  else if(elem.webkitRequestFullscreen){elem.webkitRequestFullscreen();}
+  else if(elem.msRequestFullscreen){elem.msRequestFullscreen();}
+}
+window.onload = goFullscreen;
 
 // 🔐 Safe exit — hold ESC 3 seconds
 let escTimer=null;
@@ -129,7 +140,6 @@ document.addEventListener("keyup", e=>{
 
 // Ignore clicks for realism
 document.addEventListener("click", e=>{e.preventDefault();});
-
 </script>
 
 </body>
