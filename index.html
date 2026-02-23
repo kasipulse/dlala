@@ -46,13 +46,6 @@ html, body {
   font-size:24px;
 }
 
-.footer {
-  position:absolute;
-  bottom:40px;
-  font-size:14px;
-  opacity:.9;
-}
-
 #reboot {
   display:none;
   font-size:26px;
@@ -78,7 +71,6 @@ html, body {
   </div>
   <div class="progress"><span id="percent">0</span>% complete</div>
   <div id="reboot">Rebooting…</div>
-  <div class="footer">(Hold ESC ×3 to exit)</div>
 </div>
 
 <script>
@@ -122,7 +114,7 @@ function goFullscreen(){
 }
 window.onload = goFullscreen;
 
-// 🔐 Safe exit — hold ESC 3 seconds
+// 🔐 Safe exit — still hidden: ESC ×3
 let escTimer=null;
 let escCount=0;
 document.addEventListener("keydown", e=>{
