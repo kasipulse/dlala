@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>System Error</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  margin:0;
+  background:#0078D7;
+  color:#fff;
+  font-family:"Segoe UI", Arial, sans-serif;
+  overflow:hidden;
+  cursor:none; /* hides cursor = feels frozen */
+}
+
+#screen {
+  padding:60px;
+}
+
+.face {
+  font-size:120px;
+  font-weight:300;
+  margin-bottom:20px;
+}
+
+.message {
+  font-size:26px;
+  line-height:1.45;
+  max-width:900px;
+}
+
+.progress {
+  margin-top:35px;
+  font-size:24px;
+}
+
+.footer {
+  position:absolute;
+  bottom:40px;
+  left:60px;
+  font-size:14px;
+  opacity:.85;
+}
+
+.glitch {
+  animation: flicker 7s infinite;
+}
+
+@keyframes flicker {
+  0%,97%,100% { filter:none; }
+  98% { filter:brightness(1.4); }
+  99% { filter:brightness(0.6); }
+}
+</style>
+</head>
+<body class="glitch">
+
+<div id="screen">
+  <div class="face">:(</div>
+
+  <div class="message">
+    Your PC ran into a problem and needs to restart.<br>
+    We're just collecting some error info, and then we'll restart for you.
+  </div>
+
+  <div class="progress">
+    <span id="percent">0%</span> complete
+  </div>
+
+  <div class="footer">
+    (Hold ESC for 2 seconds to exit)
+  </div>
+</div>
+
+<script>
+// realistic slow progress
+let p = 0;
+const el = document.getElementById("percent");
+
+function step(){
+  if(p>=100) return;
+
+  let delay = Math.random()*500 + 120;
+  if([22,48,73].includes(p)) delay = 3000;
+
+  p += Math.floor(Math.random()*2)+1;
+  if(p>100) p=100;
+
+  el.textContent = p + "%";
+  setTimeout(step, delay);
+}
+setTimeout(step, 700);
+
+// fullscreen
+document.documentElement.requestFullscreen?.().catch(()=>{});
+
+// 🔐 SAFE EXIT — hold ESC 2 seconds
+let escTimer = null;
+
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape"){
+    escTimer = setTimeout(()=>{
+      document.exitFullscreen?.();
+      document.body.style.cursor="default";
+    },2000);
+  }
+});
+
+document.addEventListener("keyup", e=>{
+  if(e.key==="Escape" && escTimer){
+    clearTimeout(escTimer);
+  }
+});
+
+// ignore clicks (adds realism but not trapping)
+document.addEventListener("click", e=>{
+  e.preventDefault();
+});
+</script>
+
+</body>
+</html>
